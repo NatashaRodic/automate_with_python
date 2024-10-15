@@ -20,8 +20,8 @@ def isPhoneNumber(text):
 
 
 print(isPhoneNumber('123-123-1234')) 
-phoneNumRegex = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
-mo = phoneNumRegex.search('My number is 415-555-4242')
+phoneNumRegex = re.compile(r'(\(\d\d\d\))(\d\d\d-\d\d\d\d)')
+mo = phoneNumRegex.search('My number is (415)555-4242')
 print('Phone number found: ' + mo.group())
 
 
@@ -31,6 +31,6 @@ print(mo.group(2)) #555-4242
 print(mo.group(0)) #415-555-4242
 print(mo.groups())  #('415', '555-4242')
 
-areaCode, mainNumber = mo.groups()
+areaCode, mainNumber = mo.groups()  #Using multiple assignment trick to assign each value to separate variable
 print(areaCode)
 print(mainNumber)
