@@ -34,3 +34,17 @@ print(mo.groups())  #('415', '555-4242')
 areaCode, mainNumber = mo.groups()  #Using multiple assignment trick to assign each value to separate variable
 print(areaCode)
 print(mainNumber)
+
+#One or more: Repetitions with Braces
+
+batRegex = re.compile(r'Bat(wo)+man')
+mo1 = batRegex.search('The Adventures of Batwoman')
+print(mo1.group())
+mo2 = batRegex.search('The Adventures of Batwowowoman')
+print(mo2.group())
+mo3 = batRegex.search('The Adventures of Batman')
+mo3 == None
+
+haRegex = re.compile(r'(Ha){3}')
+mo4 = haRegex.search('HaHaHa')
+print(mo4.group())
