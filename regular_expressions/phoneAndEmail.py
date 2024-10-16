@@ -1,7 +1,7 @@
 # Project 1. Phone Number and Email Address Extractor 
 import  re
 
-phoneRegex = re.compile(r'(\d{3}|\(\d{3}\)?(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})))')
+phoneRegex = re.compile(r'(\d{3}|\(\d{3}\)?(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4}))')
 number = phoneRegex.search('(333) 444-2345')
 
 # This regex is designed to match different phone number formats:
@@ -21,4 +21,13 @@ number = phoneRegex.search('(333) 444-2345')
 # - (123)456.7890
 # - 1234567890
 
-print(number.group())
+# Create email regex
+emailRegex = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4})')
+email = emailRegex.search('test.email+filter@sub.domain.co')
+
+# This regex matches a standard email format:
+# - Local part: Allows letters (a-z, A-Z), digits (0-9), and special characters (._%+-)
+# - Domain part: Allows letters, digits, dots, and hyphens
+# - Top-level domain: Requires a period followed by 2 to 4 letters (e.g., .com, .org)
+
+print(number.group(), email.group())
