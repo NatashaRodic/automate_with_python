@@ -1,33 +1,39 @@
-# Project 1. Phone Number and Email Address Extractor 
-import  re
+import pyperclip
+import re
 
-phoneRegex = re.compile(r'(\d{3}|\(\d{3}\)?(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4}))')
-number = phoneRegex.search('(333) 444-2345')
+# Define the regex for phone numbers
+phoneRegex = re.compile(r'''
+    (\(?\d{3}\)?)?          # Area code (optional, with or without parentheses)
+    (\s|\.|-)?              # Separator (optional)
+    (\d{3})                 # First three digits
+    (\s|\.|-)               # Separator
+    (\d{4})                 # Last four digits
+    (?:\s*x(\d+))?          # Extension (optional)
+''', re.VERBOSE)
 
-# This regex is designed to match different phone number formats:
-# 1. It matches an area code of 3 digits either with or without parentheses:
-#    - \d{3} matches the area code without parentheses (e.g., 123)
-#    - \(\d{3}\)? matches the area code with optional parentheses (e.g., (123))
-# 2. After the area code, it matches an optional separator (space, dot, or dash):
-#    - (\s|\.|-)?, where \s matches a space, \. matches a dot, and - matches a dash.
-#    The separator is optional.
-# 3. It then matches the next 3 digits of the phone number.
-# 4. Again, it matches an optional separator (space, dot, or dash).
-# 5. Finally, it matches the last 4 digits of the phone number.
-# This allows for flexible formats such as: 
-# - 123-456-7890
-# - (123) 456-7890
-# - 123 456 7890
-# - (123)456.7890
-# - 1234567890
+# Define the regex for email addresses
+emailRegex = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}')
 
-# Create email regex
-emailRegex = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4})')
-email = emailRegex.search('test.email+filter@sub.domain.co')
+# Find matches in the clipboard text
+text = str(pyperclip.paste())
 
-# This regex matches a standard email format:
-# - Local part: Allows letters (a-z, A-Z), digits (0-9), and special characters (._%+-)
-# - Domain part: Allows letters, digits, dots, and hyphens
-# - Top-level domain: Requires a period followed by 2 to 4 letters (e.g., .com, .org)
+matches = []
 
-print(number.group(), email.group())
+# Extract phone numbers
+for groups in phoneRegex.findall(text):
+    phoneNum = ''.join(filter(None, [groups[0], groups[2], groups[3], groups[4]]))  # Joining only non-empty groups
+    if groups[5]:  # Check if extension exists
+        phoneNum += ' x' + groups[5]  # groups[5] is the extension
+    matches.append(phoneNum)
+
+# Extract email addresses
+for groups in emailRegex.findall(text):
+    matches.append(groups)
+
+# Copy results to the clipboard
+if len(matches) > 0:
+    pyperclip.copy('\n'.join(matches))
+    print('Copied to clipboard:')
+    print('\n'.join(matches))
+else:
+    print('No phone numbers or email addresses found.')
